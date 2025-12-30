@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import { useNavigate } from 'react-router-dom';
+import { signup } from '../../api/auth.api';
 
 const Signup = () => {
   const navigate = useNavigate();
