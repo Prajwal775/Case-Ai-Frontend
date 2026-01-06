@@ -18,15 +18,17 @@ import DashboardLayout from '../../components/layout/DashboardLayout';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import api from '../../utils/axios';
+import { useChat } from '../../context/ChatContext';
 
 const formatDate = (iso) => {
   if (!iso) return '-';
   return new Date(iso).toLocaleString();
 };
 
+
 const Cases = () => {
   const navigate = useNavigate();
-
+  const { openChat } = useChat();
   const [cases, setCases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -119,6 +121,18 @@ const Cases = () => {
                         onClick={() => navigate(`/cases/${c.id}`)}
                       >
                         View
+                      </Button>
+                      <Button
+                        size='small'
+                        variant='contained'
+                        onClick={() =>
+                          openChat({
+                            caseId: c.id,
+                            sessionId: null, // backend will return
+                          })
+                        }
+                      >
+                        Chat
                       </Button>
                     </TableCell>
                   </TableRow>

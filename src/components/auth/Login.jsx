@@ -10,7 +10,6 @@ import {
   Alert,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-// import { login } from '../../api/auth.api';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
@@ -34,7 +33,7 @@ const Login = () => {
   // Redirect if already logged in
   useEffect(() => {
     if (!loading && isAuthenticated) {
-      navigate('/dashboard');
+      navigate('/cases');
     }
   }, [isAuthenticated,loading, navigate]);
 
@@ -42,7 +41,7 @@ const Login = () => {
     e.preventDefault();
     setError('');
     //   setLoading(true);
-    
+
     //   try {
     //     const data = await login(email, password);
     //     console.log('Login success:', data);

@@ -1,7 +1,14 @@
 import AppRoutes from "./routes/AppRoutes";
+import FloatingChatWidget from "./components/chat/FloatingChatWidget"; 
+
 
 function App() {
-  return <AppRoutes />;
+  return (
+    <>
+      <AppRoutes />
+      <FloatingChatWidget />
+    </>
+  );
 }
 
 export default App;

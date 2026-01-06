@@ -6,7 +6,6 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import FolderIcon from '@mui/icons-material/Folder';
 import { useNavigate, useLocation } from 'react-router-dom';
 import LawIcon from '../icons/LawIcon';
@@ -18,23 +17,15 @@ const Sidebar = () => {
     <Box
       sx={{
         width: 240,
-        // bgcolor: '#0f172a',
-        // color: '#fff',
-        // p: 2,
+
         bgcolor: '#020617', // dark blue like screenshot
         color: '#fff',
         p: 2,
-        minHeight: '100vh', // <‑ full height
+        minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
       }}
     >
-      {/* <Typography variant="h6" sx={{ mb: 3 }}>
-        CaseAdmin
-        <Typography variant="caption" display="block" color="gray">
-          Case Management
-        </Typography>
-      </Typography> */}
       <Box
         sx={{
           borderBottom: '1px solid #1f2937',
@@ -84,15 +75,6 @@ const Sidebar = () => {
       </Box>
       <List>
         {/* <ListItemButton selected> */}
-        <ListItemButton
-          selected={location.pathname === '/dashboard'}
-          onClick={() => navigate('/dashboard')}
-        >
-          <ListItemIcon sx={{ color: '#60a5fa' }}>
-            <DashboardIcon />
-          </ListItemIcon>
-          <ListItemText primary='Dashboard' />
-        </ListItemButton>
 
         <ListItemButton
           selected={location.pathname === '/cases'}
