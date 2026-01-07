@@ -1,42 +1,114 @@
+// import { useState } from "react";
 // import {
 //   Box,
-//   TextField,
-//   Avatar,
+//   Typography,
 //   IconButton,
-//   Button,
+//   Avatar,
+//   Menu,
+//   MenuItem,
+//   Divider,
+//   Tooltip,
 // } from "@mui/material";
 // import NotificationsIcon from "@mui/icons-material/Notifications";
+// import LogoutIcon from "@mui/icons-material/Logout";
+// import { useAuth } from "../../context/AuthContext";
 
-// const Topbar = () => {
+// const getInitials = (name = "Admin User") => {
+//   const parts = name.split(" ");
+//   if (parts.length === 1) return parts[0][0];
+//   return parts[0][0] + parts[1][0];
+// };
+
+// const Topbar = ({ title = "Dashboard" }) => {
+//   const { logout } = useAuth();
+
+//   const [anchorEl, setAnchorEl] = useState(null);
+//   const open = Boolean(anchorEl);
+
+//   const handleMenuOpen = (e) => {
+//     setAnchorEl(e.currentTarget);
+//   };
+
+//   const handleMenuClose = () => {
+//     setAnchorEl(null);
+//   };
+
+//   const handleLogout = () => {
+//     handleMenuClose();
+//     logout();
+//   };
+
 //   return (
 //     <Box
 //       sx={{
 //         height: 64,
-//         bgcolor: "#fff",
-//         borderBottom: "1px solid #e5e7eb",
+//         bgcolor: "#ffffff",
 //         px: 3,
 //         display: "flex",
 //         alignItems: "center",
 //         justifyContent: "space-between",
+//         boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
+//         position: "sticky",
+//         top: 0,
+//         zIndex: 10,
 //       }}
 //     >
-//       <TextField
-//         size="small"
-//         placeholder="Search..."
-//         sx={{ width: 300 }}
-//       />
-//       <Button variant="contained" color="primary" onClick={() => {
-//         localStorage.removeItem("authToken");
-//         localStorage.removeItem("refreshToken");
-//         window.location.href = "/login";
-//       }}>
-//        LOGOUT
-//       </Button>
+//       {/* LEFT: Page Title */}
+//       <Typography variant="h6" fontWeight={600}>
+//         {title}
+//       </Typography>
+
+//       {/* RIGHT: Actions */}
 //       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-//         <IconButton>
-//           <NotificationsIcon />
-//         </IconButton>
-//         <Avatar>AU</Avatar>
+//         <Tooltip title="Notifications">
+//           <IconButton>
+//             <NotificationsIcon />
+//           </IconButton>
+//         </Tooltip>
+
+//         <Tooltip title="Account">
+//           <IconButton onClick={handleMenuOpen}>
+//             <Avatar
+//               sx={{
+//                 bgcolor: "primary.main",
+//                 width: 36,
+//                 height: 36,
+//                 fontSize: 14,
+//                 cursor: "pointer",
+//               }}
+//             >
+//               {getInitials("Admin User")}
+//             </Avatar>
+//           </IconButton>
+//         </Tooltip>
+
+//         {/* DROPDOWN MENU */}
+//         <Menu
+//           anchorEl={anchorEl}
+//           open={open}
+//           onClose={handleMenuClose}
+//           anchorOrigin={{
+//             vertical: "bottom",
+//             horizontal: "right",
+//           }}
+//           transformOrigin={{
+//             vertical: "top",
+//             horizontal: "right",
+//           }}
+//         >
+//           <MenuItem disabled>
+//             <Typography fontSize={14} fontWeight={500}>
+//               Admin User
+//             </Typography>
+//           </MenuItem>
+
+//           <Divider />
+
+//           <MenuItem onClick={handleLogout}>
+//             <LogoutIcon fontSize="small" sx={{ mr: 1 }} />
+//             Logout
+//           </MenuItem>
+//         </Menu>
 //       </Box>
 //     </Box>
 //   );
@@ -54,8 +126,8 @@ import {
   Divider,
   Tooltip,
 } from "@mui/material";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import LogoutIcon from "@mui/icons-material/Logout";
+import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { useAuth } from "../../context/AuthContext";
 
 const getInitials = (name = "Admin User") => {
@@ -64,9 +136,8 @@ const getInitials = (name = "Admin User") => {
   return parts[0][0] + parts[1][0];
 };
 
-const Topbar = ({ title = "Dashboard" }) => {
+const Topbar = ({ title = "" }) => {
   const { logout } = useAuth();
-
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -86,40 +157,61 @@ const Topbar = ({ title = "Dashboard" }) => {
   return (
     <Box
       sx={{
-        height: 64,
+        height: 56,
+        px: 2.5,
         bgcolor: "#ffffff",
-        px: 3,
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
+        borderBottom: "1px solid var(--border-light)",
         position: "sticky",
         top: 0,
         zIndex: 10,
       }}
     >
-      {/* LEFT: Page Title */}
-      <Typography variant="h6" fontWeight={600}>
+      {/* LEFT: Title */}
+      <Typography
+        sx={{
+          fontSize: 16,
+          fontWeight: 600,
+          color: "var(--text-main)",
+        }}
+      >
         {title}
       </Typography>
 
       {/* RIGHT: Actions */}
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
         <Tooltip title="Notifications">
-          <IconButton>
-            <NotificationsIcon />
+          <IconButton
+            size="small"
+            sx={{
+              color: "var(--text-muted)",
+              "&:hover": {
+                bgcolor: "var(--bg-hover)",
+              },
+            }}
+          >
+            <NotificationsOutlinedIcon fontSize="small" />
           </IconButton>
         </Tooltip>
 
         <Tooltip title="Account">
-          <IconButton onClick={handleMenuOpen}>
+          <IconButton
+            onClick={handleMenuOpen}
+            size="small"
+            sx={{
+              p: 0.25,
+            }}
+          >
             <Avatar
               sx={{
-                bgcolor: "primary.main",
-                width: 36,
-                height: 36,
-                fontSize: 14,
-                cursor: "pointer",
+                width: 32,
+                height: 32,
+                fontSize: 13,
+                fontWeight: 500,
+                bgcolor: "var(--primary-soft)",
+                color: "var(--primary)",
               }}
             >
               {getInitials("Admin User")}
@@ -127,30 +219,39 @@ const Topbar = ({ title = "Dashboard" }) => {
           </IconButton>
         </Tooltip>
 
-        {/* DROPDOWN MENU */}
+        {/* User Menu */}
         <Menu
           anchorEl={anchorEl}
           open={open}
           onClose={handleMenuClose}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          transformOrigin={{ vertical: "top", horizontal: "right" }}
+          PaperProps={{
+            sx: {
+              mt: 1,
+              minWidth: 180,
+              borderRadius: 1.5,
+              border: "1px solid var(--border-light)",
+              boxShadow: "none",
+            },
           }}
         >
           <MenuItem disabled>
-            <Typography fontSize={14} fontWeight={500}>
+            <Typography fontSize={13} fontWeight={600}>
               Admin User
             </Typography>
           </MenuItem>
 
           <Divider />
 
-          <MenuItem onClick={handleLogout}>
-            <LogoutIcon fontSize="small" sx={{ mr: 1 }} />
+          <MenuItem
+            onClick={handleLogout}
+            sx={{
+              fontSize: 13,
+              color: "var(--text-main)",
+            }}
+          >
+            <LogoutOutlinedIcon fontSize="small" sx={{ mr: 1 }} />
             Logout
           </MenuItem>
         </Menu>
@@ -160,4 +261,3 @@ const Topbar = ({ title = "Dashboard" }) => {
 };
 
 export default Topbar;
-

@@ -1,3 +1,191 @@
+// import {
+//   Box,
+//   Button,
+//   TextField,
+//   Typography,
+//   Stack,
+//   Paper,
+//   Alert,
+// } from '@mui/material';
+// import { useNavigate } from 'react-router-dom';
+// import { useState } from 'react';
+// import DashboardLayout from '../../components/layout/DashboardLayout';
+// import api from '../../utils/axios';
+// import { createCaseSchema } from '../../validation/case.schema';
+// import { getYupErrors } from '../../utils/yupErrors';
+
+// const CreateCase = () => {
+//   const navigate = useNavigate();
+
+//   const [form, setForm] = useState({
+//     case_name: '',
+//     description: '',
+//   });
+
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState('');
+//   const [fieldErrors, setFieldErrors] = useState({});
+
+//   const validateForm = async (values) => {
+//     try {
+//       await createCaseSchema.validate(values, { abortEarly: false });
+//       setFieldErrors({});
+//       return true;
+//     } catch (err) {
+//       setFieldErrors(getYupErrors(err));
+//       return false;
+//     }
+//   };
+
+//   const handleChange = async (e) => {
+//     const { name, value } = e.target;
+
+//     const updatedForm = {
+//       ...form,
+//       [name]: value,
+//     };
+
+//     setForm(updatedForm);
+//     await validateForm(updatedForm);
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+
+//     const isValid = await validateForm(form);
+//     if (!isValid) return;
+
+//     setError('');
+//     setLoading(true);
+
+//     try {
+//       const { data } = await api.post('/api/v1/cases', {
+//         case_name: form.case_name,
+//         description: form.description,
+//       });
+
+//       console.log('Case created successfully:', data);
+//       navigate('/cases');
+//     } catch (err) {
+//       setError(
+//         err.response?.data?.message ||
+//           'Failed to create case. Please try again.'
+//       );
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <DashboardLayout title='Create Case'>
+//       <Box
+//         sx={{
+//           display: 'flex',
+//           justifyContent: 'center',
+//           mt: 4,
+//         }}
+//       >
+//         <Paper
+//           elevation={3}
+//           sx={{
+//             width: '100%',
+//             maxWidth: 600,
+//             borderRadius: 3,
+//             overflow: 'hidden',
+//           }}
+//         >
+//           {/* Card Header */}
+//           <Box
+//             sx={{
+//               px: 3,
+//               py: 2,
+//               borderBottom: '1px solid #e5e7eb',
+//               bgcolor: '#ffffff',
+//             }}
+//           >
+//             <Typography variant='h6' fontWeight={600}>
+//               Case Information
+//             </Typography>
+//             <Typography variant='body2' color='text.secondary'>
+//               Fill in the details to create a new case
+//             </Typography>
+//           </Box>
+
+//           {/* Card Body */}
+//           <Box sx={{ p: 3 }}>
+//             {error && (
+//               <Alert severity='error' sx={{ mb: 2 }}>
+//                 {error}
+//               </Alert>
+//             )}
+
+//             <Box component='form' onSubmit={handleSubmit}>
+//               <Stack spacing={3}>
+//                 <TextField
+//                   label='Case Name'
+//                   name='case_name'
+//                   value={form.case_name}
+//                   onChange={handleChange}
+//                   required
+//                   fullWidth
+//                   error={Boolean(fieldErrors.case_name)}
+//                   helperText={`${form.case_name.length}/50 ${
+//                     fieldErrors.case_name || ''
+//                   }`}
+//                   inputProps={{ maxLength: 50 }}
+//                 />
+
+//                 <TextField
+//                   label='Description'
+//                   name='description'
+//                   value={form.description}
+//                   onChange={handleChange}
+//                   multiline
+//                   rows={4}
+//                   fullWidth
+//                   error={Boolean(fieldErrors.description)}
+//                   helperText={`${form.description.length}/200 ${
+//                     fieldErrors.description || ''
+//                   }`}
+//                   inputProps={{ maxLength: 200 }}
+//                 />
+
+//                 {/* Actions */}
+//                 <Box
+//                   sx={{
+//                     display: 'flex',
+//                     justifyContent: 'flex-end',
+//                     gap: 2,
+//                     pt: 1,
+//                   }}
+//                 >
+//                   <Button
+//                     variant='outlined'
+//                     onClick={() => navigate('/cases')}
+//                     disabled={loading}
+//                   >
+//                     Cancel
+//                   </Button>
+
+//                   <Button
+//                     type='submit'
+//                     variant='contained'
+//                     disabled={loading || Object.keys(fieldErrors).length > 0}
+//                   >
+//                     {loading ? 'Saving...' : 'Create Case'}
+//                   </Button>
+//                 </Box>
+//               </Stack>
+//             </Box>
+//           </Box>
+//         </Paper>
+//       </Box>
+//     </DashboardLayout>
+//   );
+// };
+
+// export default CreateCase;
+
 import {
   Box,
   Button,
@@ -6,26 +194,36 @@ import {
   Stack,
   Paper,
   Alert,
-} from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import DashboardLayout from '../../components/layout/DashboardLayout';
-import api from '../../utils/axios';
-import { createCaseSchema } from '../../validation/case.schema';
-import { getYupErrors } from '../../utils/yupErrors';
+  CircularProgress,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import DashboardLayout from "../../components/layout/DashboardLayout";
+import api from "../../utils/axios";
+import { createCaseSchema } from "../../validation/case.schema";
+import { getYupErrors } from "../../utils/yupErrors";
+
+const MAX_FILE_SIZE = 25 * 1024 * 1024;
+
+const ALLOWED_FILE_TYPES = [
+  "application/pdf",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
 
 const CreateCase = () => {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    case_name: '',
-    description: '',
+    case_name: "",
   });
 
+  const [file, setFile] = useState(null);
+
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
 
+  /* ---------------- VALIDATION ---------------- */
   const validateForm = async (values) => {
     try {
       await createCaseSchema.validate(values, { abortEarly: false });
@@ -36,13 +234,6 @@ const CreateCase = () => {
       return false;
     }
   };
-
-  // const handleChange = (e) => {
-  //   setForm((prev) => ({
-  //     ...prev,
-  //     [e.target.name]: e.target.value,
-  //   }));
-  // };
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
@@ -56,27 +247,60 @@ const CreateCase = () => {
     await validateForm(updatedForm);
   };
 
+  /* ---------------- FILE VALIDATION ---------------- */
+  const handleFileSelect = (selectedFile) => {
+    setError("");
+
+    if (!selectedFile) return;
+
+    if (!ALLOWED_FILE_TYPES.includes(selectedFile.type)) {
+      setError("Only PDF or DOCX files are allowed.");
+      return;
+    }
+
+    if (selectedFile.size > MAX_FILE_SIZE) {
+      setError("File size must be less than 25 MB.");
+      return;
+    }
+
+    setFile(selectedFile);
+  };
+
+  /* ---------------- SUBMIT ---------------- */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const isValid = await validateForm(form);
     if (!isValid) return;
 
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
-      const { data } = await api.post('/api/v1/cases', {
+      /* 1️⃣ CREATE CASE */
+      const { data } = await api.post("/api/v1/cases", {
         case_name: form.case_name,
-        description: form.description,
+        description: "",
       });
 
-      console.log('Case created successfully:', data);
-      navigate('/cases');
+      const caseId = data.id;
+
+      /* 2️⃣ UPLOAD FILE (OPTIONAL) */
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        await api.post("/api/v1/files/upload", formData, {
+          params: { case_id: caseId },
+        });
+      }
+
+      /* 3️⃣ NAVIGATE */
+      navigate(`/cases/${caseId}`);
     } catch (err) {
       setError(
         err.response?.data?.message ||
-          'Failed to create case. Please try again.'
+          "Failed to create case. Please try again."
       );
     } finally {
       setLoading(false);
@@ -84,104 +308,109 @@ const CreateCase = () => {
   };
 
   return (
-    <DashboardLayout title='Create Case'>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          mt: 4,
-        }}
-      >
+    <DashboardLayout title="Create Case">
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
         <Paper
-          elevation={3}
           sx={{
-            width: '100%',
+            width: "100%",
             maxWidth: 600,
             borderRadius: 3,
-            overflow: 'hidden',
+            border: "1px solid #e5e7eb",
+            boxShadow: "none",
           }}
         >
-          {/* Card Header */}
-          <Box
-            sx={{
-              px: 3,
-              py: 2,
-              borderBottom: '1px solid #e5e7eb',
-              bgcolor: '#ffffff',
-            }}
-          >
-            <Typography variant='h6' fontWeight={600}>
-              Case Information
+          {/* Header */}
+          <Box sx={{ px: 3, py: 2, borderBottom: "1px solid #e5e7eb" }}>
+            <Typography fontSize={18} fontWeight={600}>
+              Create Case
             </Typography>
-            <Typography variant='body2' color='text.secondary'>
-              Fill in the details to create a new case
+            <Typography fontSize={13} color="text.secondary">
+              Create a new case and optionally upload a file
             </Typography>
           </Box>
 
-          {/* Card Body */}
+          {/* Body */}
           <Box sx={{ p: 3 }}>
             {error && (
-              <Alert severity='error' sx={{ mb: 2 }}>
+              <Alert severity="error" sx={{ mb: 2 }}>
                 {error}
               </Alert>
             )}
 
-            <Box component='form' onSubmit={handleSubmit}>
+            <Box component="form" onSubmit={handleSubmit}>
               <Stack spacing={3}>
+                {/* Case Name */}
                 <TextField
-                  label='Case Name'
-                  name='case_name'
+                  label="Case Name"
+                  name="case_name"
                   value={form.case_name}
                   onChange={handleChange}
                   required
                   fullWidth
                   error={Boolean(fieldErrors.case_name)}
                   helperText={`${form.case_name.length}/50 ${
-                    fieldErrors.case_name || ''
+                    fieldErrors.case_name || ""
                   }`}
                   inputProps={{ maxLength: 50 }}
                 />
 
-                <TextField
-                  label='Description'
-                  name='description'
-                  value={form.description}
-                  onChange={handleChange}
-                  multiline
-                  rows={4}
-                  fullWidth
-                  error={Boolean(fieldErrors.description)}
-                  helperText={`${form.description.length}/200 ${
-                    fieldErrors.description || ''
-                  }`}
-                  inputProps={{ maxLength: 200 }}
-                />
+                {/* File Upload */}
+                <Box>
+                  <Typography fontSize={13} color="#6b7280" mb={0.5}>
+                    Upload File (Optional)
+                  </Typography>
+
+                  <Button
+                    variant="outlined"
+                    component="label"
+                    sx={{ textTransform: "none" }}
+                  >
+                    Choose File
+                    <input
+                      type="file"
+                      hidden
+                      accept=".pdf,.docx"
+                      onChange={(e) =>
+                        handleFileSelect(e.target.files[0])
+                      }
+                    />
+                  </Button>
+
+                  {file && (
+                    <Typography fontSize={13} mt={1}>
+                      Selected: <strong>{file.name}</strong>
+                    </Typography>
+                  )}
+                </Box>
 
                 {/* Actions */}
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    gap: 2,
-                    pt: 1,
-                  }}
+                <Stack
+                  direction="row"
+                  justifyContent="flex-end"
+                  spacing={2}
                 >
                   <Button
-                    variant='outlined'
-                    onClick={() => navigate('/cases')}
+                    variant="outlined"
+                    onClick={() => navigate("/cases")}
                     disabled={loading}
                   >
                     Cancel
                   </Button>
 
                   <Button
-                    type='submit'
-                    variant='contained'
-                    disabled={loading || Object.keys(fieldErrors).length > 0}
+                    type="submit"
+                    variant="contained"
+                    disabled={
+                      loading || Object.keys(fieldErrors).length > 0
+                    }
                   >
-                    {loading ? 'Saving...' : 'Create Case'}
+                    {loading ? (
+                      <CircularProgress size={20} />
+                    ) : (
+                      "Create Case"
+                    )}
                   </Button>
-                </Box>
+                </Stack>
               </Stack>
             </Box>
           </Box>
