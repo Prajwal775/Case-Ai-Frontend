@@ -16,19 +16,11 @@ import { useAuth } from '../../context/AuthContext';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  // const [loading, setLoading] = useState(false);
-  // const [checkIsAuthenticated, setCheckIsAuthenticated] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login, loading, isAuthenticated } = useAuth();
 
-  // useEffect(() => {
-  //   if (localStorage.getItem('authToken')) {
-  //     console.log('User is already authenticated, redirecting to dashboard');
-  //     navigate('/dashboard');
-  //   }
-  //   setCheckIsAuthenticated(false);
-  // }, []);
+  
 
   // Redirect if already logged in
   useEffect(() => {
@@ -40,32 +32,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    //   setLoading(true);
-
-    //   try {
-    //     const data = await login(email, password);
-    //     console.log('Login success:', data);
-    //     // localStorage.setItem('auth', JSON.stringify(data));
-    //     localStorage.setItem('authToken', data.access_token);
-    //     localStorage.setItem('refreshToken', data.refresh_token);
-
-    //     // window.location.href = "/dashboard";
-    //     navigate('/dashboard');
-
-    //     // Example: store token
-
-    //     // alert("Login successful");
-    //   } catch (err) {
-    //     setError('Invalid email or password');
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // };
-    // if (checkIsAuthenticated) {
-    //   console.log('Checking authentication status...');
-    //   return <CircularProgress />;
-    // } else {
-
+    
     try {
       await login(email, password);
     } catch {
