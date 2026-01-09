@@ -18,6 +18,13 @@ export function AIChatbotModal({ isOpen, onClose, caseId, caseName }) {
 
   const messagesRef = useRef(null);
 
+  function generateId() {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+      return crypto.randomUUID();
+    }
+    return `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+  }
+
   /* ================= LOAD CHAT ================= */
   useEffect(() => {
     if (!isOpen || !caseId) return;
@@ -63,7 +70,7 @@ export function AIChatbotModal({ isOpen, onClose, caseId, caseName }) {
     if (!inputMessage.trim() || !sessionId) return;
 
     const userMessage = {
-      id: crypto.randomUUID(),
+      id: generateId(),
       type: 'user',
       content: inputMessage,
       timestamp: getTime(),
@@ -82,7 +89,7 @@ export function AIChatbotModal({ isOpen, onClose, caseId, caseName }) {
       const res = await sendChatMessage(caseId, userMessage.content, sessionId);
 
       const botMessage = {
-        id: crypto.randomUUID(),
+        id: generateId(),
         type: 'bot',
         content: res.answer,
         timestamp: getTime(),

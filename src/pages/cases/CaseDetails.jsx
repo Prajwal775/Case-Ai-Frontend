@@ -31,10 +31,10 @@ export default function CaseDetailsPage() {
     <div className='min-h-screen bg-slate-50'>
       {/* HEADER */}
       <CaseHeader
-        caseId={caseData.case_no}
-        status={caseData.status}
-        priority={caseData.priority}
-        caseType={caseData.case_type}
+        caseId={caseData?.case_no}
+        status={caseData?.status}
+        priority={caseData?.priority}
+        caseType={caseData?.case_type}
       />
 
       {/* CONTENT */}
@@ -78,11 +78,11 @@ export default function CaseDetailsPage() {
         </div>
 
         {/* INSIGHTS */}
-        <CaseInsights caseMetadata={caseData.case_metadata} />
+        <CaseInsights caseMetadata={caseData?.case_metadata} />
 
         {/* DESCRIPTION */}
         <CaseDescription
-          description={caseData.case_metadata.case_description}
+          description={caseData?.case_metadata?.case_description}
         />
 
         <CaseDocuments
