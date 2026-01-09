@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { login as loginApi } from '../api/auth.api';
+import { clearAllChats } from '../components/chat/chatStorage';
 
 const AuthContext = createContext(null);
 
@@ -45,6 +46,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem('authToken');
     localStorage.removeItem('refreshToken');
+    clearAllChats();
     window.location.href = '/login';
   };
 
