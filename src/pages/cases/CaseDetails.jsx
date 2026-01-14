@@ -32,6 +32,7 @@ export default function CaseDetailsPage() {
       {/* HEADER */}
       <CaseHeader
         caseId={caseData?.case_no}
+        caseNumericId={id}
         status={caseData?.status}
         priority={caseData?.priority}
         caseType={caseData?.case_type}
@@ -41,7 +42,7 @@ export default function CaseDetailsPage() {
       <div className='max-w-7xl mx-auto px-8 py-8 space-y-8'>
         {/* OVERVIEW + DEADLINES */}
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch'>
-        {/* <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch'> */}
+          {/* <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch'> */}
           <div className='lg:col-span-2'>
             <CaseOverview
               plaintiff={
